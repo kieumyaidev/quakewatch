@@ -1,1 +1,0 @@
-ALTER TABLE earthquakes ADD COLUMN region VARCHAR(255);

@@ -16,7 +16,3 @@ services:
         fromDatabase:
           name: quakewatch-db
           property: connectionString
-      - key: RUN_WORKER
-        value: "true"
-      - key: COLLECT_EVERY_SECONDS
-        value: "900"

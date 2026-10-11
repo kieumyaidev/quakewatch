@@ -16,11 +16,6 @@ def build_engine(url: str | None = None) -> Engine:
     return create_engine(url or database_url())
 
 
-def _render(sql: str, engine: Engine) -> str:
-    serial = "SERIAL PRIMARY KEY" if engine.dialect.name == "postgresql" else "INTEGER PRIMARY KEY AUTOINCREMENT"
-    return sql.replace("{{serial_primary_key}}", serial)
-
-
 def migrate(engine: Engine) -> list[str]:
     applied_now = []
     with engine.begin() as conn:
@@ -32,7 +27,7 @@ def migrate(engine: Engine) -> list[str]:
         for path in sorted(MIGRATIONS_DIR.glob("*.sql")):
             if path.name in applied:
                 continue
-            conn.execute(text(_render(path.read_text(), engine)))
+            conn.execute(text(path.read_text()))
             conn.execute(text("INSERT INTO schema_migrations (version) VALUES (:v)"), {"v": path.name})
             applied_now.append(path.name)
     return applied_now
